@@ -6,14 +6,13 @@
     autoHideDialCode: true,
     autoPlaceholder: true,
     customPlaceholder: null,
-    defaultCountry: "",
-    geoIpLookup: null,
+    defaultCountry: '',
     nationalMode: true,
-    numberType: "MOBILE",
+    numberType: 'MOBILE',
     onlyCountries: void 0,
     preferredCountries: ['us', 'gb'],
     skipUtilScriptDownload: false,
-    utilsScript: ""
+    utilsScript: ''
   }).directive('internationalPhoneNumber', [
     '$timeout', 'ipnConfig', function($timeout, ipnConfig) {
       return {
@@ -30,7 +29,7 @@
               $timeout(function() {
                 element.intlTelInput('setNumber', element.val());
                 return ctrl.$setViewValue(element.val());
-              }, 0);
+              });
             }
           }
           read = function() {
@@ -78,7 +77,7 @@
           });
           scope.$watch('country', function(newValue) {
             if (newValue !== null && newValue !== void 0 && newValue !== '') {
-              return element.intlTelInput("selectCountry", newValue);
+              return element.intlTelInput('setCountry', newValue);
             }
           });
           ctrl.$formatters.push(function(value) {
@@ -106,7 +105,9 @@
             return element.intlTelInput('isValidNumber');
           };
           element.on('blur keyup change', function(event) {
-            return scope.$digest(read);
+            if (!scope.$$phase) {
+              return scope.$apply(read);
+            }
           });
           return element.on('$destroy', function() {
             element.intlTelInput('destroy');

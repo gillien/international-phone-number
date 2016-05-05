@@ -10,14 +10,13 @@ angular.module("internationalPhoneNumber", [])
     autoHideDialCode:       true
     autoPlaceholder:        true
     customPlaceholder:      null
-    defaultCountry:         ""
-    geoIpLookup:            null
+    defaultCountry:         ''
     nationalMode:           true
-    numberType:             "MOBILE"
+    numberType:             'MOBILE'
     onlyCountries:          undefined
     preferredCountries:     ['us', 'gb']
     skipUtilScriptDownload: false
-    utilsScript:            ""
+    utilsScript:            ''
   }
 
 .directive 'internationalPhoneNumber', ['$timeout', 'ipnConfig', ($timeout, ipnConfig) ->
@@ -35,8 +34,6 @@ angular.module("internationalPhoneNumber", [])
         $timeout () ->
           element.intlTelInput 'setNumber', element.val()
           ctrl.$setViewValue element.val()
-        , 0
-
 
     read = () ->
       ctrl.$setViewValue element.val()
@@ -85,7 +82,7 @@ angular.module("internationalPhoneNumber", [])
 
     scope.$watch('country', (newValue) ->
         if newValue != null && newValue != undefined && newValue != ''
-            element.intlTelInput("selectCountry", newValue)
+            element.intlTelInput 'setCountry', newValue
     )
 
     ctrl.$formatters.push (value) ->
@@ -112,7 +109,8 @@ angular.module("internationalPhoneNumber", [])
       element.intlTelInput('isValidNumber')
 
     element.on 'blur keyup change', (event) ->
-      scope.$digest read
+      if !scope.$$phase
+        scope.$apply read
 
     element.on '$destroy', () ->
       element.intlTelInput('destroy');
