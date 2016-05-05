@@ -41,6 +41,7 @@ Sneak preview:
     allowExtensions:        false
     autoFormat:             true
     autoHideDialCode:       true
+    separateDialCode:       false
     autoPlaceholder:        true
     customPlaceholder:      null
     defaultCountry:         ""
