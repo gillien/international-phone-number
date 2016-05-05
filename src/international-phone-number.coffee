@@ -9,6 +9,7 @@ angular.module("internationalPhoneNumber", [])
     autoFormat:             true
     autoHideDialCode:       true
     separateDialCode:       false
+    modelWithDialCode:      false
     autoPlaceholder:        true
     customPlaceholder:      null
     defaultCountry:         ''
@@ -29,7 +30,6 @@ angular.module("internationalPhoneNumber", [])
     country: '='
 
   link: (scope, element, attrs, ctrl) ->
-
     if ctrl
       if element.val() != ''
         $timeout () ->
@@ -38,6 +38,8 @@ angular.module("internationalPhoneNumber", [])
 
     read = () ->
       ctrl.$setViewValue element.val()
+      if !scope.$$phase && !scope.$root.$$phase
+        scope.$apply
 
     handleWhatsSupposedToBeAnArray = (value) ->
       if value instanceof Array
@@ -72,13 +74,12 @@ angular.module("internationalPhoneNumber", [])
           ctrl.$modelValue = newValue
           element.val newValue
 
-        element.intlTelInput(options)
+        element.intlTelInput options
 
         unless options.skipUtilScriptDownload || attrs.skipUtilScriptDownload != undefined || options.utilsScript
-          element.intlTelInput('loadUtils', '/bower_components/intl-tel-input/build/js/utils.js')
+          element.intlTelInput 'loadUtils', '/bower_components/intl-tel-input/build/js/utils.js'
 
         watchOnce()
-
     )
 
     scope.$watch('country', (newValue) ->
@@ -97,9 +98,13 @@ angular.module("internationalPhoneNumber", [])
       if !value
         return value
 
-      selectedCountryData = element.intlTelInput 'getSelectedCountryData'
-      dialCode = selectedCountryData?.dialCode
-      '+' + dialCode + value.replace(/[^\d]/g, '')
+      value = value.replace(/[^\d]/g, '')
+      if options.modelWithDialCode
+        selectedCountryData = element.intlTelInput 'getSelectedCountryData'
+        dialCode = selectedCountryData?.dialCode
+        '+' + dialCode + value
+      else
+        value
 
     ctrl.$validators.internationalPhoneNumber = (value) ->
       selectedCountry = element.intlTelInput('getSelectedCountryData')
@@ -107,20 +112,18 @@ angular.module("internationalPhoneNumber", [])
       if !value || (selectedCountry && selectedCountry.dialCode == value)
         return true
 
-      element.intlTelInput('isValidNumber')
+      element.intlTelInput 'isValidNumber'
 
-    element.on 'blur keyup change', (event) ->
-      if !scope.$$phase && !scope.$root.$$phase
-        scope.$apply read
+    element.on 'blur keyup change', () ->
+      read()
 
-    element.on 'countrychange', (event, countryData) ->
+    element.on 'countrychange', () ->
+      # force $parser re-run
       ctrl.$setViewValue null
       read()
-      if !scope.$$phase && !scope.$root.$$phase
-        scope.$apply
 
     element.on '$destroy', () ->
-      element.intlTelInput('destroy');
+      element.intlTelInput 'destroy'
       element.off 'blur keyup change'
       element.off 'countrychange'
 ]

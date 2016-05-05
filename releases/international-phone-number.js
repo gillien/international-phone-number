@@ -5,6 +5,7 @@
     autoFormat: true,
     autoHideDialCode: true,
     separateDialCode: false,
+    modelWithDialCode: false,
     autoPlaceholder: true,
     customPlaceholder: null,
     defaultCountry: '',
@@ -34,7 +35,10 @@
             }
           }
           read = function() {
-            return ctrl.$setViewValue(element.val());
+            ctrl.$setViewValue(element.val());
+            if (!scope.$$phase && !scope.$root.$$phase) {
+              return scope.$apply;
+            }
           };
           handleWhatsSupposedToBeAnArray = function(value) {
             if (value instanceof Array) {
@@ -93,9 +97,14 @@
             if (!value) {
               return value;
             }
-            selectedCountryData = element.intlTelInput('getSelectedCountryData');
-            dialCode = selectedCountryData != null ? selectedCountryData.dialCode : void 0;
-            return '+' + dialCode + value.replace(/[^\d]/g, '');
+            value = value.replace(/[^\d]/g, '');
+            if (options.modelWithDialCode) {
+              selectedCountryData = element.intlTelInput('getSelectedCountryData');
+              dialCode = selectedCountryData != null ? selectedCountryData.dialCode : void 0;
+              return '+' + dialCode + value;
+            } else {
+              return value;
+            }
           });
           ctrl.$validators.internationalPhoneNumber = function(value) {
             var selectedCountry;
@@ -105,17 +114,12 @@
             }
             return element.intlTelInput('isValidNumber');
           };
-          element.on('blur keyup change', function(event) {
-            if (!scope.$$phase && !scope.$root.$$phase) {
-              return scope.$apply(read);
-            }
+          element.on('blur keyup change', function() {
+            return read();
           });
-          element.on('countrychange', function(event, countryData) {
+          element.on('countrychange', function() {
             ctrl.$setViewValue(null);
-            read();
-            if (!scope.$$phase && !scope.$root.$$phase) {
-              return scope.$apply;
-            }
+            return read();
           });
           return element.on('$destroy', function() {
             element.intlTelInput('destroy');

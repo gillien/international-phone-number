@@ -3,7 +3,7 @@ international-phone-number
 
 AngularJS directive implementing [intl-tel-input](https://github.com/Bluefieldscom/intl-tel-input) jQuery plugin.
 
-> This fork of [international-phone-number](https://github.com/mareczek/international-phone-number) includes the dial code within the phone number, and also updates `intl-tel-input` to latest version.
+> This fork of [international-phone-number](https://github.com/mareczek/international-phone-number) includes the dial code within the phone number, and also updates `intl-tel-input` to latest version. For more information, please check out the [releases](https://github.com/mebibou/international-phone-number/releases).
 
 Installation
 --
@@ -42,6 +42,7 @@ Sneak preview:
     autoFormat:             true
     autoHideDialCode:       true
     separateDialCode:       false
+    modelWithDialCode:      false
     autoPlaceholder:        true
     customPlaceholder:      null
     defaultCountry:         ""
@@ -93,6 +94,11 @@ with default country:
 with countries only:
 ```html
 <input type="text" international-phone-number only-countries ng-model="phone">
+```
+
+include dial code in model:
+```html
+<input type="text" international-phone-number model-with-dial-code="true" show-dial-code="true" separate-dial-code="true" ng-model="phone">
 ```
 
 Feel free to mix options together:
