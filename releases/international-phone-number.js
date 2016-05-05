@@ -106,13 +106,21 @@
             return element.intlTelInput('isValidNumber');
           };
           element.on('blur keyup change', function(event) {
-            if (!scope.$$phase) {
+            if (!scope.$$phase && !scope.$root.$$phase) {
               return scope.$apply(read);
+            }
+          });
+          element.on('countrychange', function(event, countryData) {
+            ctrl.$setViewValue(null);
+            read();
+            if (!scope.$$phase && !scope.$root.$$phase) {
+              return scope.$apply;
             }
           });
           return element.on('$destroy', function() {
             element.intlTelInput('destroy');
-            return element.off('blur keyup change');
+            element.off('blur keyup change');
+            return element.off('countrychange');
           });
         }
       };

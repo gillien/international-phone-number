@@ -82,8 +82,8 @@ angular.module("internationalPhoneNumber", [])
     )
 
     scope.$watch('country', (newValue) ->
-        if newValue != null && newValue != undefined && newValue != ''
-            element.intlTelInput 'setCountry', newValue
+      if newValue != null && newValue != undefined && newValue != ''
+        element.intlTelInput 'setCountry', newValue
     )
 
     ctrl.$formatters.push (value) ->
@@ -110,10 +110,17 @@ angular.module("internationalPhoneNumber", [])
       element.intlTelInput('isValidNumber')
 
     element.on 'blur keyup change', (event) ->
-      if !scope.$$phase
+      if !scope.$$phase && !scope.$root.$$phase
         scope.$apply read
+
+    element.on 'countrychange', (event, countryData) ->
+      ctrl.$setViewValue null
+      read()
+      if !scope.$$phase && !scope.$root.$$phase
+        scope.$apply
 
     element.on '$destroy', () ->
       element.intlTelInput('destroy');
       element.off 'blur keyup change'
+      element.off 'countrychange'
 ]
