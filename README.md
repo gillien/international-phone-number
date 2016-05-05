@@ -3,6 +3,8 @@ international-phone-number
 
 AngularJS directive implementing [intl-tel-input](https://github.com/Bluefieldscom/intl-tel-input) jQuery plugin.
 
+> This fork of [international-phone-number](https://github.com/mareczek/international-phone-number) includes the dial code within the phone number, and also updates `intl-tel-input` to latest version.
+
 Installation
 --
 Install via Bower:
