@@ -56,8 +56,8 @@ angular.module("internationalPhoneNumber", [])
         options.preferredCountries = handleWhatsSupposedToBeAnArray option
       else if key == 'onlyCountries'
         options.onlyCountries = handleWhatsSupposedToBeAnArray option
-      else if typeof(value) == "boolean"
-        options[key] = (option == "true")
+      else if typeof(value) == 'boolean'
+        options[key] = (option == 'true')
       else
         options[key] = option
 
@@ -72,6 +72,7 @@ angular.module("internationalPhoneNumber", [])
             newValue = '+' + newValue
 
           ctrl.$modelValue = newValue
+          element.val newValue
 
         element.intlTelInput(options)
 
@@ -98,7 +99,9 @@ angular.module("internationalPhoneNumber", [])
       if !value
         return value
 
-      value.replace(/[^\d]/g, '')
+      selectedCountryData = element.intlTelInput 'getSelectedCountryData'
+      dialCode = selectedCountryData?.dialCode
+      '+' + dialCode + value.replace(/[^\d]/g, '')
 
     ctrl.$validators.internationalPhoneNumber = (value) ->
       selectedCountry = element.intlTelInput('getSelectedCountryData')
@@ -106,10 +109,10 @@ angular.module("internationalPhoneNumber", [])
       if !value || (selectedCountry && selectedCountry.dialCode == value)
         return true
 
-      element.intlTelInput("isValidNumber")
+      element.intlTelInput('isValidNumber')
 
     element.on 'blur keyup change', (event) ->
-      scope.$apply read
+      scope.$digest read
 
     element.on '$destroy', () ->
       element.intlTelInput('destroy');

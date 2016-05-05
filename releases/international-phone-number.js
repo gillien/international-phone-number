@@ -54,8 +54,8 @@
               return options.preferredCountries = handleWhatsSupposedToBeAnArray(option);
             } else if (key === 'onlyCountries') {
               return options.onlyCountries = handleWhatsSupposedToBeAnArray(option);
-            } else if (typeof value === "boolean") {
-              return options[key] = option === "true";
+            } else if (typeof value === 'boolean') {
+              return options[key] = option === 'true';
             } else {
               return options[key] = option;
             }
@@ -67,6 +67,7 @@
                   newValue = '+' + newValue;
                 }
                 ctrl.$modelValue = newValue;
+                element.val(newValue);
               }
               element.intlTelInput(options);
               if (!(options.skipUtilScriptDownload || attrs.skipUtilScriptDownload !== void 0 || options.utilsScript)) {
@@ -88,10 +89,13 @@
             return element.val();
           });
           ctrl.$parsers.push(function(value) {
+            var dialCode, selectedCountryData;
             if (!value) {
               return value;
             }
-            return value.replace(/[^\d]/g, '');
+            selectedCountryData = element.intlTelInput('getSelectedCountryData');
+            dialCode = selectedCountryData != null ? selectedCountryData.dialCode : void 0;
+            return '+' + dialCode + value.replace(/[^\d]/g, '');
           });
           ctrl.$validators.internationalPhoneNumber = function(value) {
             var selectedCountry;
@@ -99,10 +103,10 @@
             if (!value || (selectedCountry && selectedCountry.dialCode === value)) {
               return true;
             }
-            return element.intlTelInput("isValidNumber");
+            return element.intlTelInput('isValidNumber');
           };
           element.on('blur keyup change', function(event) {
-            return scope.$apply(read);
+            return scope.$digest(read);
           });
           return element.on('$destroy', function() {
             element.intlTelInput('destroy');
