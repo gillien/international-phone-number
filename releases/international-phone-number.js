@@ -70,7 +70,7 @@
               }
               element.intlTelInput(options);
               if (!(options.skipUtilScriptDownload || attrs.skipUtilScriptDownload !== void 0 || options.utilsScript)) {
-                element.intlTelInput('loadUtils', '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js');
+                element.intlTelInput('loadUtils', '/bower_components/intl-tel-input/build/js/utils.js');
               }
               return watchOnce();
             });

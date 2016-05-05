@@ -74,7 +74,7 @@ angular.module("internationalPhoneNumber", [])
         element.intlTelInput(options)
 
         unless options.skipUtilScriptDownload || attrs.skipUtilScriptDownload != undefined || options.utilsScript
-          element.intlTelInput('loadUtils', '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js')
+          element.intlTelInput('loadUtils', '/bower_components/intl-tel-input/build/js/utils.js')
 
         watchOnce()
 
